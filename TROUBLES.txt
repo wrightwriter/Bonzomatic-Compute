@@ -1,0 +1,10 @@
+mkdir build
+cd build
+cmake ..
+make
+cp bonzomatic ..
+cd ..
+cp data/extra/config.json .
+cp -R data/extra/textures .
+cp -R data/extra/textures/ .
+./bonzomatic

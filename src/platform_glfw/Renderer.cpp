@@ -224,7 +224,7 @@ namespace Renderer
   {
     glfwSetErrorCallback(error_callback);
     theShader = 0;
-    
+
 #ifdef __APPLE__
     glfwInitHint(GLFW_COCOA_CHDIR_RESOURCES, GLFW_FALSE);
 #endif
@@ -261,7 +261,7 @@ namespace Renderer
 
     glfwWindowHint(GLFW_RESIZABLE, (settings->ResizableWindow && settings->windowMode == RENDERER_WINDOWMODE_WINDOWED) ? GLFW_TRUE : GLFW_FALSE);
     glfwWindowHint(GLFW_DECORATED, settings->windowMode == RENDERER_WINDOWMODE_BORDERLESS ? GLFW_FALSE : GLFW_TRUE);
-    
+
     // Prevent fullscreen window minimize on focus loss
     glfwWindowHint(GLFW_AUTO_ICONIFY, GL_FALSE);
 
@@ -270,14 +270,14 @@ namespace Renderer
     if (settings->windowMode == RENDERER_WINDOWMODE_BORDERLESS)
     {
       const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-      
+
       // On my computer with two monitors, putting the exact width/height give strange behaviors
       settings->nWidth = mode->width-1;
       settings->nHeight = mode->height-1;
       nWidth = settings->nWidth;
       nHeight = settings->nHeight;
 
-      glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);      
+      glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
     }
 
     std::string finalWindowName = "BONZOMATIC - GLFW" + windowName;
@@ -294,7 +294,7 @@ namespace Renderer
     ShowTouchBar(mWindow);
 #endif
 #endif
-      
+
     glfwMakeContextCurrent(mWindow);
 
     // TODO: here add text callbacks
@@ -325,7 +325,7 @@ namespace Renderer
 #endif
 
     printf("[GLFW] OpenGL Version %s, GLSL %s\n", glGetString(GL_VERSION), glGetString(GL_SHADING_LANGUAGE_VERSION));
-    
+
     // Now, since OpenGL is behaving a lot in fullscreen modes, lets collect the real obtained size!
     printf("[GLFW] Requested framebuffer size: %d x %d\n", nWidth, nHeight);
     int fbWidth = 1;
@@ -334,7 +334,7 @@ namespace Renderer
     nWidth = settings->nWidth = fbWidth;
     nHeight = settings->nHeight = fbHeight;
     printf("[GLFW] Obtained framebuffer size: %d x %d\n", fbWidth, fbHeight);
-    
+
     static float pFullscreenQuadVertices[] =
     {
       -1.0, -1.0,  0.5, 0.0, 0.0,
@@ -371,6 +371,7 @@ namespace Renderer
     GLint result = 0;
     char szErrorBuffer[5000];
     glGetShaderInfoLog(glhVertexShader, 4000, &size, szErrorBuffer);
+    printf(szErrorBuffer);
     glGetShaderiv(glhVertexShader, GL_COMPILE_STATUS, &result);
     if (!result)
     {
@@ -421,6 +422,7 @@ namespace Renderer
     glShaderSource(vshd, 1, (const GLchar**)&defaultGUIVertexShader, &nShaderSize);
     glCompileShader(vshd);
     glGetShaderInfoLog(vshd, 4000, &size, szErrorBuffer);
+    printf(szErrorBuffer);
     glGetShaderiv(vshd, GL_COMPILE_STATUS, &result);
     if (!result)
     {
@@ -434,6 +436,10 @@ namespace Renderer
     glShaderSource(fshd, 1, (const GLchar**)&defaultGUIPixelShader, &nShaderSize);
     glCompileShader(fshd);
     glGetShaderInfoLog(fshd, 4000, &size, szErrorBuffer);
+
+    printf("glCompileShader[fragment - 0]\n");
+    printf(szErrorBuffer);
+
     glGetShaderiv(fshd, GL_COMPILE_STATUS, &result);
     if (!result)
     {
@@ -460,7 +466,7 @@ namespace Renderer
     AllocateBuffers();
 
     glViewport(0, 0, nWidth, nHeight);
-    
+
     run = true;
 
     return true;
@@ -685,6 +691,7 @@ namespace Renderer
     glShaderSource(shd, 1, (const GLchar**)&szShaderCode, &nShaderCodeSize);
     glCompileShader(shd);
     glGetShaderInfoLog(shd, nErrorBufferSize, &size, szErrorBuffer);
+    printf(szErrorBuffer);
     glGetShaderiv(shd, GL_COMPILE_STATUS, &result);
     if (!result)
     {
@@ -697,6 +704,7 @@ namespace Renderer
     glAttachShader(prg, shd);
     glLinkProgram(prg);
     glGetProgramInfoLog(prg, nErrorBufferSize - size, &size, szErrorBuffer + size);
+    printf(szErrorBuffer);
     glGetProgramiv(prg, GL_LINK_STATUS, &result);
     if (!result)
     {

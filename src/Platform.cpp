@@ -123,7 +123,12 @@ void Font::Create(const FontParameters &fp)
 
   FILE* f = fopen(fp.faceName, "rb");
 
-  assert(f);
+  // font may be undefined if config.json not found
+  if (f == NULL)
+  {
+      fprintf(stderr, "Can not find font file: %s\n", fp.faceName);
+      return;
+  }
 
   fseek(f, 0, SEEK_END);
   size_t len = ftell(f);
